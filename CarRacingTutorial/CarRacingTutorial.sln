@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRacingTutorial.CSharp.Plugins", "CarRacingTutorial.CSharp.Plugins.csproj", "{0032615E-5A67-BA65-BC58-0CE643B3DC21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRacingTutorial.CSharp", "CarRacingTutorial.CSharp.csproj", "{C4369A25-15F2-1802-9FB3-B58D232785A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRacingTutorial.CSharp.Editor", "CarRacingTutorial.CSharp.Editor.csproj", "{E0BEBCF2-8495-B462-A192-7AC18EBB9351}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0032615E-5A67-BA65-BC58-0CE643B3DC21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0032615E-5A67-BA65-BC58-0CE643B3DC21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0032615E-5A67-BA65-BC58-0CE643B3DC21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0032615E-5A67-BA65-BC58-0CE643B3DC21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4369A25-15F2-1802-9FB3-B58D232785A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4369A25-15F2-1802-9FB3-B58D232785A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4369A25-15F2-1802-9FB3-B58D232785A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4369A25-15F2-1802-9FB3-B58D232785A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0BEBCF2-8495-B462-A192-7AC18EBB9351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0BEBCF2-8495-B462-A192-7AC18EBB9351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0BEBCF2-8495-B462-A192-7AC18EBB9351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0BEBCF2-8495-B462-A192-7AC18EBB9351}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
