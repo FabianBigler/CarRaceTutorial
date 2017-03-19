@@ -16,6 +16,9 @@ public class CarBehaviour : MonoBehaviour {
     public float maxSpeedBackwardKMH;
     public float steerAngleFactor;
 
+    public Texture2D guiSpeedDisplay;
+    public Texture2D guiSpeedPointer;
+
     private float _currentSpeedKMH;
     
 
@@ -31,7 +34,33 @@ public class CarBehaviour : MonoBehaviour {
         SetFriction(forwardFriction, sidewaysFriction);
     }
 
-    void FixedUpdate()        
+    // OnGUI is called on every frame when the orthographic GUI is rendered
+    void OnGUI()
+    {
+        // Scale everything to the screen height.
+        float scale = 3.0f;
+        int sh = Screen.height;
+        int size = (int)(sh / scale); // size of speed meter
+
+        int lenN = (int)(size * 0.7777f); // length of needle
+        int offN = (int)(size / 8.2f); // offset of needle
+                                       // Draw speed meter
+        GUI.DrawTexture(new Rect(0, sh - size, size, size),
+        guiSpeedDisplay,
+        ScaleMode.StretchToFill);
+        // Rotate the the coordinate system around a point
+        //290 degree / 140 kmh
+        float degPerKMH = (float)290 / 140;
+        Debug.Log("kmh:" + _currentSpeedKMH + "," + "degPerKMH: " + degPerKMH);
+        GUIUtility.RotateAroundPivot(Mathf.Abs(_currentSpeedKMH) * degPerKMH + 36, 
+                new Vector2(lenN / 2 + offN, sh-size + lenN / 2 + offN));
+        // Draw the speed pointer
+        GUI.DrawTexture(new Rect(offN, sh - size + offN, lenN, lenN),
+        guiSpeedPointer,
+        ScaleMode.StretchToFill);
+    }
+
+        void FixedUpdate()        
     {
         var motorTorque = maxTorque * Input.GetAxis("Vertical");
         var steerAngle = maxSteerAngle * Input.GetAxis("Horizontal");
