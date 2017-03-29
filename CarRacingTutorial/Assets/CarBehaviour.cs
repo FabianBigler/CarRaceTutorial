@@ -60,7 +60,7 @@ public class CarBehaviour : MonoBehaviour {
         ScaleMode.StretchToFill);
     }
 
-        void FixedUpdate()        
+    void FixedUpdate()        
     {
         var motorTorque = maxTorque * Input.GetAxis("Vertical");
         var steerAngle = maxSteerAngle * Input.GetAxis("Horizontal");
