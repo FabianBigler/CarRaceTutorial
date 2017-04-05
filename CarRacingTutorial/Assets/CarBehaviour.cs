@@ -15,10 +15,14 @@ public class CarBehaviour : MonoBehaviour {
     public float maxSpeedKMH;
     public float maxSpeedBackwardKMH;
     public float steerAngleFactor;
+    public bool thrustEnabled;
 
     public Texture2D guiSpeedDisplay;
-    public Texture2D guiSpeedPointer;
+    public Texture2D guiSpeedPointer;    
+    public AudioClip engineSingleRPMSoundClip;
+    
 
+    private AudioSource _engineAudioSource;
     private float _currentSpeedKMH;
     
 
@@ -32,6 +36,14 @@ public class CarBehaviour : MonoBehaviour {
             transformCenterOfMass.localPosition.z);
 
         SetFriction(forwardFriction, sidewaysFriction);
+
+        // Configure AudioSource component by program
+        _engineAudioSource = gameObject.AddComponent<AudioSource>();
+        _engineAudioSource.clip = engineSingleRPMSoundClip;
+        _engineAudioSource.loop = true;
+        _engineAudioSource.volume = 0.7f;
+        _engineAudioSource.playOnAwake = true;
+        _engineAudioSource.Play();        
     }
 
     // OnGUI is called on every frame when the orthographic GUI is rendered
@@ -51,19 +63,24 @@ public class CarBehaviour : MonoBehaviour {
         // Rotate the the coordinate system around a point
         //290 degree / 140 kmh
         float degPerKMH = (float)290 / 140;
-        Debug.Log("kmh:" + _currentSpeedKMH + "," + "degPerKMH: " + degPerKMH);
+        //Debug.Log("kmh:" + _currentSpeedKMH + "," + "degPerKMH: " + degPerKMH);
         GUIUtility.RotateAroundPivot(Mathf.Abs(_currentSpeedKMH) * degPerKMH + 36, 
                 new Vector2(lenN / 2 + offN, sh-size + lenN / 2 + offN));
         // Draw the speed pointer
-        GUI.DrawTexture(new Rect(offN, sh - size + offN, lenN, lenN),
+        GUI.DrawTexture(new Rect(offN, sh - size + offN, lenN, lenN),                        
         guiSpeedPointer,
         ScaleMode.StretchToFill);
+                
     }
 
     void FixedUpdate()        
     {
         var motorTorque = maxTorque * Input.GetAxis("Vertical");
         var steerAngle = maxSteerAngle * Input.GetAxis("Horizontal");
+        if(!thrustEnabled)
+        {
+            return;
+        }
 
         _currentSpeedKMH = body.velocity.magnitude * 3.6f;
         //buggy drives backwards, if motor torque force is negative
@@ -75,9 +92,10 @@ public class CarBehaviour : MonoBehaviour {
         {
             if (_currentSpeedKMH > maxSpeedKMH)
                 motorTorque = 0;                    
-        }
-        
-        if((_currentSpeedKMH * steerAngleFactor) > 1 )
+        }        
+
+
+        if ((_currentSpeedKMH * steerAngleFactor) > 1 )
         {
             steerAngle = steerAngle / (_currentSpeedKMH * steerAngleFactor);
         }
@@ -110,7 +128,26 @@ public class CarBehaviour : MonoBehaviour {
             wheelFL.motorTorque = maxTorque * Input.GetAxis("Vertical");
             wheelFR.motorTorque = wheelFL.motorTorque;
         }
+
+        int gearNum = 0;
+        float engineRPM = kmh2rpm(_currentSpeedKMH, out gearNum);
+        Debug.Log("Gear number: " + gearNum);
+        SetEngineSound(engineRPM);
     }
+
+    void SetEngineSound(float engineRPM)
+    {
+        if (_engineAudioSource == null) return;
+        float minRPM = 800;
+        float maxRPM = 8000;
+        float minPitch = 0.3f;
+        float maxPitch = 3.0f;
+
+        var rpmInPercent = (engineRPM - minRPM) / (maxRPM - minRPM);
+        float pitch = Mathf.Lerp(minPitch, maxPitch, rpmInPercent);         
+        _engineAudioSource.pitch = pitch;
+    }
+
     void SetSteerAngle(float angle)
     {
         wheelFL.steerAngle = angle;
@@ -138,4 +175,52 @@ public class CarBehaviour : MonoBehaviour {
         wheelBR.forwardFriction = f_fwWFC;
         wheelBR.sidewaysFriction = f_swWFC;    
     }
+
+    class gear
+    {
+        public gear(float minKMH, float minRPM, float maxKMH, float maxRPM)
+        {
+            _minRPM = minRPM;
+            _minKMH = minKMH;
+            _maxRPM = maxRPM;
+            _maxKMH = maxKMH;
+        }
+        private float _minRPM;
+        private float _minKMH;
+        private float _maxRPM;
+        private float _maxKMH;
+        public bool speedFits(float kmh)
+        {
+            return kmh >= _minKMH && kmh <= _maxKMH;
+        }
+        public float interpolate(float kmh)
+        {            
+            var kmhInPercent = (kmh - _minKMH) / (_maxKMH - _minKMH);
+            var interpolatedRPM = Mathf.Lerp(_minRPM, _maxRPM, kmhInPercent);            
+            return interpolatedRPM;
+        }
+    }
+
+    float kmh2rpm(float kmh, out int gearNum)
+    {
+        gear[] gears = new gear[]
+        {   new gear( 1, 900, 12, 1400),
+            new gear( 12, 900, 25, 2000),
+            new gear( 25, 1350, 45, 2500),
+            new gear( 45, 1950, 70, 3500),
+            new gear( 70, 2500, 112, 4000),
+            new gear(112, 3100, 180, 5000)
+        };
+        for (int i = 0; i < gears.Length; ++i)
+        {
+            if (gears[i].speedFits(kmh))
+            {
+                gearNum = i + 1;
+                return gears[i].interpolate(kmh);
+            }
+        }
+        gearNum = 1;
+        return 800;
+    }
+
 }

@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Assets\CarBehaviour.cs" />
     <Compile Include="Assets\SmoothFollow.cs" />
+    <Compile Include="Assets\TimingBehaviour.cs" />
     <Compile Include="Assets\WheelBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
