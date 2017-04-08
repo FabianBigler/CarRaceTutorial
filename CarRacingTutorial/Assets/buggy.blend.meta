@@ -3,7 +3,7 @@ guid: 01e5b8832a95b0d49827c36de51abee2
 timeCreated: 1488227671
 licenseType: Free
 ModelImporter:
-  serializedVersion: 18
+  serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
     100002: buggy
@@ -11,27 +11,42 @@ ModelImporter:
     100006: WheelBR
     100008: WheelFL
     100010: WheelFR
+    100012: Cylinder
+    100014: Cylinder_001
+    100016: Cylinder_002
     400000: //RootNode
     400002: buggy
     400004: WheelBL
     400006: WheelBR
     400008: WheelFL
     400010: WheelFR
+    400012: Cylinder
+    400014: Cylinder_001
+    400016: Cylinder_002
     2300000: buggy
     2300002: WheelBL
     2300004: WheelBR
     2300006: WheelFL
     2300008: WheelFR
+    2300010: Cylinder
+    2300012: Cylinder_001
+    2300014: Cylinder_002
     3300000: buggy
     3300002: WheelBL
     3300004: WheelBR
     3300006: WheelFL
     3300008: WheelFR
+    3300010: Cylinder
+    3300012: Cylinder_001
+    3300014: Cylinder_002
     4300000: WheelBR
     4300002: WheelFR
     4300004: WheelBL
     4300006: WheelFL
     4300008: buggy
+    4300010: Cylinder
+    4300012: Cylinder_002
+    4300014: Cylinder_001
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -41,6 +56,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
@@ -48,9 +64,9 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     animationCompression: 1
-    animationRotationError: .5
-    animationPositionError: .5
-    animationScaleError: .5
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
     clipAnimations: []
@@ -74,23 +90,26 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 1
+    tangentImportMode: 4
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human: []
     skeleton: []
-    armTwist: .5
-    foreArmTwist: .5
-    upperLegTwist: .5
-    legTwist: .5
-    armStretch: .0500000007
-    legStretch: .0500000007
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
   humanoidOversampling: 1
