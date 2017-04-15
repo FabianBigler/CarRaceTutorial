@@ -20,8 +20,11 @@ public class CarBehaviour : MonoBehaviour {
     public Texture2D guiSpeedDisplay;
     public Texture2D guiSpeedPointer;    
     public AudioClip engineSingleRPMSoundClip;
-    
+    public ParticleSystem smokeL;
+    public ParticleSystem smokeR;
 
+    private ParticleSystem.EmissionModule _smokeLEmission;
+    private ParticleSystem.EmissionModule _smokeREmission;
     private AudioSource _engineAudioSource;
     private float _currentSpeedKMH;
     
@@ -43,7 +46,12 @@ public class CarBehaviour : MonoBehaviour {
         _engineAudioSource.loop = true;
         _engineAudioSource.volume = 0.7f;
         _engineAudioSource.playOnAwake = true;
-        _engineAudioSource.Play();        
+        _engineAudioSource.Play();
+
+        _smokeLEmission = smokeL.emission;
+        _smokeREmission = smokeR.emission;
+        _smokeLEmission.enabled = true;
+        _smokeREmission.enabled = true;
     }
 
     // OnGUI is called on every frame when the orthographic GUI is rendered
@@ -131,8 +139,10 @@ public class CarBehaviour : MonoBehaviour {
 
         int gearNum = 0;
         float engineRPM = kmh2rpm(_currentSpeedKMH, out gearNum);
-        Debug.Log("Gear number: " + gearNum);
+        //Debug.Log("Gear number: " + gearNum);
         SetEngineSound(engineRPM);
+
+        SetParticleSystems(engineRPM);
     }
 
     void SetEngineSound(float engineRPM)
@@ -146,6 +156,13 @@ public class CarBehaviour : MonoBehaviour {
         var rpmInPercent = (engineRPM - minRPM) / (maxRPM - minRPM);
         float pitch = Mathf.Lerp(minPitch, maxPitch, rpmInPercent);         
         _engineAudioSource.pitch = pitch;
+    }
+
+    void SetParticleSystems(float engineRPM)
+    {
+        float smokeRate = engineRPM / 10.0f;
+        _smokeLEmission.rateOverDistance = new ParticleSystem.MinMaxCurve(smokeRate);
+        _smokeREmission.rateOverDistance = new ParticleSystem.MinMaxCurve(smokeRate);
     }
 
     void SetSteerAngle(float angle)

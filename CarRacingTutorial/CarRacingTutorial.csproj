@@ -73,6 +73,9 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="EasyRoads3D">
+      <HintPath>Assets\EasyRoads3D Free\lib\EasyRoads3D.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="CarRacingTutorial.Plugins.csproj">
@@ -82,11 +85,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\CarBehaviour.cs" />
+    <Compile Include="Assets\EasyRoads3D Free\scripts\EasyRoads3DTerrainID.cs" />
+    <Compile Include="Assets\EasyRoads3D Free\scripts\MarkerScript.cs" />
+    <Compile Include="Assets\EasyRoads3D Free\scripts\RoadObjectScript.cs" />
+    <Compile Include="Assets\EasyRoads3D Free\scripts\SideObjectInit.cs" />
+    <Compile Include="Assets\EasyRoads3D Free\scripts\SurfaceScript.cs" />
+    <Compile Include="Assets\EasyRoads3D Free\scripts\sideObjectScript.cs" />
+    <Compile Include="Assets\ParentTriggerNotification.cs" />
     <Compile Include="Assets\SmoothFollow.cs" />
     <Compile Include="Assets\TimingBehaviour.cs" />
     <Compile Include="Assets\WheelBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\EasyRoads3D Free\Release Notes.txt" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D Marker.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D-Alpha-BumpSpec.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D-Alpha-Bumped.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D-Alpha-Diffuse.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D-Normal-BumpSpec.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D-Normal-Bumped.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D-Normal-Diffuse.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D-Road-Edit-Mode.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D-Surface.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\EasyRoads3D-Surface_Alpha.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\Surface.shader" />
+    <None Include="Assets\EasyRoads3D Free\Shaders\surfaceAlpha.shader" />
+    <None Include="Assets\EasyRoads3D Free\_Readme.txt" />
+    <None Include="Assets\EasyRoads3D Free\_readme 1.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
     <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
     <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
