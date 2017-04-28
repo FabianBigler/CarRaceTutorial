@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets;
 
 public class CarBehaviour : MonoBehaviour {
     public WheelCollider wheelFL;
@@ -16,20 +17,29 @@ public class CarBehaviour : MonoBehaviour {
     public float maxSpeedBackwardKMH;
     public float steerAngleFactor;
     public bool thrustEnabled;
+    public float maxBrakeTorque;
+
+    public WheelBehaviour[] wheelBehaviours = new WheelBehaviour[4];
 
     public Texture2D guiSpeedDisplay;
     public Texture2D guiSpeedPointer;    
     public AudioClip engineSingleRPMSoundClip;
     public ParticleSystem smokeL;
     public ParticleSystem smokeR;
+    public AudioClip brakeAudioClip;
+    
 
     private ParticleSystem.EmissionModule _smokeLEmission;
     private ParticleSystem.EmissionModule _smokeREmission;
     private AudioSource _engineAudioSource;
     private float _currentSpeedKMH;
-    
+    private bool _doSkidmarking = false;
+    private AudioSource _brakeAudioSource;    
+
 
     void Start() {
+        //var animator = GetComponent<Animator>();
+        //animator.Play("Platformanimation");        
         body = GetComponent<Rigidbody>();
         var transformCenterOfMass = centerOfmass.GetComponent<Transform>();
             
@@ -48,6 +58,12 @@ public class CarBehaviour : MonoBehaviour {
         _engineAudioSource.playOnAwake = true;
         _engineAudioSource.Play();
 
+        // Configure AudioSource component by program
+        _brakeAudioSource = gameObject.AddComponent<AudioSource>();
+        _brakeAudioSource.clip = brakeAudioClip;
+        _brakeAudioSource.loop = true;        
+        _brakeAudioSource.playOnAwake = false;        
+
         _smokeLEmission = smokeL.emission;
         _smokeREmission = smokeR.emission;
         _smokeLEmission.enabled = true;
@@ -57,32 +73,37 @@ public class CarBehaviour : MonoBehaviour {
     // OnGUI is called on every frame when the orthographic GUI is rendered
     void OnGUI()
     {
-        // Scale everything to the screen height.
-        float scale = 3.0f;
-        int sh = Screen.height;
-        int size = (int)(sh / scale); // size of speed meter
+        if(guiSpeedDisplay != null)
+        {
+            // Scale everything to the screen height.
+            float scale = 3.0f;
+            int sh = Screen.height;
+            int size = (int)(sh / scale); // size of speed meter
 
-        int lenN = (int)(size * 0.7777f); // length of needle
-        int offN = (int)(size / 8.2f); // offset of needle
-                                       // Draw speed meter
-        GUI.DrawTexture(new Rect(0, sh - size, size, size),
-        guiSpeedDisplay,
-        ScaleMode.StretchToFill);
-        // Rotate the the coordinate system around a point
-        //290 degree / 140 kmh
-        float degPerKMH = (float)290 / 140;
-        //Debug.Log("kmh:" + _currentSpeedKMH + "," + "degPerKMH: " + degPerKMH);
-        GUIUtility.RotateAroundPivot(Mathf.Abs(_currentSpeedKMH) * degPerKMH + 36, 
-                new Vector2(lenN / 2 + offN, sh-size + lenN / 2 + offN));
-        // Draw the speed pointer
-        GUI.DrawTexture(new Rect(offN, sh - size + offN, lenN, lenN),                        
-        guiSpeedPointer,
-        ScaleMode.StretchToFill);
-                
+            int lenN = (int)(size * 0.7777f); // length of needle
+            int offN = (int)(size / 8.2f); // offset of needle
+                                           // Draw speed meter
+            GUI.DrawTexture(new Rect(0, sh - size, size, size),
+            guiSpeedDisplay,
+            ScaleMode.StretchToFill);
+            // Rotate the the coordinate system around a point
+            //290 degree / 140 kmh
+            float degPerKMH = (float)290 / 140;
+            //Debug.Log("kmh:" + _currentSpeedKMH + "," + "degPerKMH: " + degPerKMH);
+            GUIUtility.RotateAroundPivot(Mathf.Abs(_currentSpeedKMH) * degPerKMH + 36,
+                    new Vector2(lenN / 2 + offN, sh - size + lenN / 2 + offN));
+            // Draw the speed pointer
+            GUI.DrawTexture(new Rect(offN, sh - size + offN, lenN, lenN),
+            guiSpeedPointer,
+            ScaleMode.StretchToFill);
+
+        }
     }
 
     void FixedUpdate()        
     {
+        GetComponentInChildren<Renderer>().material.color = BuggyConfiguration.BodyColor;
+
         var motorTorque = maxTorque * Input.GetAxis("Vertical");
         var steerAngle = maxSteerAngle * Input.GetAxis("Horizontal");
         if(!thrustEnabled)
@@ -100,14 +121,27 @@ public class CarBehaviour : MonoBehaviour {
         {
             if (_currentSpeedKMH > maxSpeedKMH)
                 motorTorque = 0;                    
-        }        
+        }
 
 
-        if ((_currentSpeedKMH * steerAngleFactor) > 1 )
+        if ((_currentSpeedKMH * steerAngleFactor) > 1)
         {
             steerAngle = steerAngle / (_currentSpeedKMH * steerAngleFactor);
         }
-        
+
+        // Evaluate ground under front wheels
+        string groundTagFL = string.Empty;
+        string groundTagFR = string.Empty;
+        int groundTextureFL = 0;
+        int groundTextureFR = 0;
+        bool carIsOnDrySand;
+        bool carIsNotOnSand;
+       
+        WheelHit hitFL = GetGroundInfos(ref wheelFL, ref groundTagFL, ref groundTextureFL);
+        WheelHit hitFR = GetGroundInfos(ref wheelFR, ref groundTagFR, ref groundTextureFR);
+        carIsOnDrySand = groundTagFL.CompareTo("Terrain") == 0 && groundTextureFL == 1;
+        carIsNotOnSand = !(groundTagFL.CompareTo("Terrain") == 0 && (groundTextureFL <= 1));
+                
         SetMotorTorque(motorTorque);
         SetSteerAngle(steerAngle);
 
@@ -118,12 +152,20 @@ public class CarBehaviour : MonoBehaviour {
         bool doBraking = _currentSpeedKMH > 0.5f &&
         (Input.GetAxis("Vertical") < 0 && velocityIsForeward ||
         Input.GetAxis("Vertical") > 0 && !velocityIsForeward);
-        if (doBraking)
+
+        bool doFullBrake = Input.GetKey("space");
+        _doSkidmarking = carIsNotOnSand && doFullBrake && _currentSpeedKMH > 20.0f;
+        Debug.Log("DoSkidmark? " + _doSkidmarking.ToString());
+        SetBrakeSound(_doSkidmarking);
+        SetSkidmarking(_doSkidmarking);
+
+        if (doBraking || doFullBrake)
         {
-            wheelFL.brakeTorque = 3000;
-            wheelFR.brakeTorque = 3000;
-            wheelBL.brakeTorque = 3000;
-            wheelBR.brakeTorque = 3000;
+            float brakeTorque = doFullBrake ? maxBrakeTorque : 3000;
+            wheelFL.brakeTorque = brakeTorque;
+            wheelFR.brakeTorque = brakeTorque;
+            wheelBL.brakeTorque = brakeTorque;
+            wheelBR.brakeTorque = brakeTorque;
             wheelFL.motorTorque = 0;
             wheelFR.motorTorque = 0;
         }
@@ -143,6 +185,12 @@ public class CarBehaviour : MonoBehaviour {
         SetEngineSound(engineRPM);
 
         SetParticleSystems(engineRPM);
+    }
+
+    void SetSkidmarking(bool doSkidmarking)
+    {
+        foreach (var wheel in wheelBehaviours)
+            wheel.DoSkidmarking(doSkidmarking);
     }
 
     void SetEngineSound(float engineRPM)
@@ -240,4 +288,33 @@ public class CarBehaviour : MonoBehaviour {
         return 800;
     }
 
+    // Returns the wheel hit collider, the tag and main texture of the passed wheel c
+     WheelHit GetGroundInfos(ref WheelCollider wheelCol,ref string groundTag, ref int groundTextureIndex)
+    {
+        // Default values
+        groundTag = "InTheAir";
+        groundTextureIndex = -1;
+        // Query ground by ray shoot on the front left wheel collider
+        WheelHit wheelHit;
+        wheelCol.GetGroundHit(out wheelHit);
+        // If not in the air query collider
+        if (wheelHit.collider)
+        {
+            groundTag = wheelHit.collider.tag;
+            if (wheelHit.collider.CompareTag("Terrain"))
+                groundTextureIndex = TerrainSurface.GetMainTexture(transform.position);
+        }
+        return wheelHit;
+    }
+
+    void SetBrakeSound(bool doBrakeSound)
+    {
+        if (doBrakeSound)
+        {
+            _brakeAudioSource.volume = _currentSpeedKMH / 100.0f;
+            _brakeAudioSource.Play();
+        }
+        else
+            _brakeAudioSource.Stop();
+    }
 }

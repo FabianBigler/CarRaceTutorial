@@ -84,6 +84,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\BuggyConfiguration.cs" />
     <Compile Include="Assets\CarBehaviour.cs" />
     <Compile Include="Assets\EasyRoads3D Free\scripts\EasyRoads3DTerrainID.cs" />
     <Compile Include="Assets\EasyRoads3D Free\scripts\MarkerScript.cs" />
@@ -91,8 +92,11 @@
     <Compile Include="Assets\EasyRoads3D Free\scripts\SideObjectInit.cs" />
     <Compile Include="Assets\EasyRoads3D Free\scripts\SurfaceScript.cs" />
     <Compile Include="Assets\EasyRoads3D Free\scripts\sideObjectScript.cs" />
+    <Compile Include="Assets\MenuBehaviour.cs" />
     <Compile Include="Assets\ParentTriggerNotification.cs" />
+    <Compile Include="Assets\SkidmarkBehaviour.cs" />
     <Compile Include="Assets\SmoothFollow.cs" />
+    <Compile Include="Assets\TerrainSurface.cs" />
     <Compile Include="Assets\TimingBehaviour.cs" />
     <Compile Include="Assets\WheelBehaviour.cs" />
   </ItemGroup>

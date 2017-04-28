@@ -112,11 +112,11 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>Library\UnityAssemblies\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="EasyRoads3D">
-      <HintPath>Assets\EasyRoads3D Free\lib\EasyRoads3D.dll</HintPath>
-    </Reference>
     <Reference Include="EasyRoads3DEditor">
       <HintPath>Assets\EasyRoads3D Free\Editor\EasyRoads3DEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="EasyRoads3D">
+      <HintPath>Assets\EasyRoads3D Free\lib\EasyRoads3D.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
