@@ -34,10 +34,14 @@ public class CarBehaviour : MonoBehaviour {
     private AudioSource _engineAudioSource;
     private float _currentSpeedKMH;
     private bool _doSkidmarking = false;
-    private AudioSource _brakeAudioSource;    
+    private AudioSource _brakeAudioSource;
+
+    private float currentHighscore = 0f;
 
 
     void Start() {
+        currentHighscore = PlayerPrefs.GetFloat("Highscore");
+
         //var animator = GetComponent<Animator>();
         //animator.Play("Platformanimation");        
         body = GetComponent<Rigidbody>();

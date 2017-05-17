@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.2f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -92,8 +94,11 @@
     <Compile Include="Assets\EasyRoads3D Free\scripts\SideObjectInit.cs" />
     <Compile Include="Assets\EasyRoads3D Free\scripts\SurfaceScript.cs" />
     <Compile Include="Assets\EasyRoads3D Free\scripts\sideObjectScript.cs" />
+    <Compile Include="Assets\GhostCar\GhostCarRecord.cs" />
+    <Compile Include="Assets\GhostCar\GhostCarRecorder.cs" />
     <Compile Include="Assets\MenuBehaviour.cs" />
     <Compile Include="Assets\ParentTriggerNotification.cs" />
+    <Compile Include="Assets\GhostCar\Serializer.cs" />
     <Compile Include="Assets\SkidmarkBehaviour.cs" />
     <Compile Include="Assets\SmoothFollow.cs" />
     <Compile Include="Assets\TerrainSurface.cs" />
@@ -116,6 +121,7 @@
     <None Include="Assets\EasyRoads3D Free\Shaders\surfaceAlpha.shader" />
     <None Include="Assets\EasyRoads3D Free\_Readme.txt" />
     <None Include="Assets\EasyRoads3D Free\_readme 1.txt" />
+    <None Include="Assets\Materials\Skidmarks.shader" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
     <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
     <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />

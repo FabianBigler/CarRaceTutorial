@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/SceneMenu.unity
+- path: Assets/Smoke/Smoke.unity
   isLoaded: 1
   isActive: 1

@@ -138,6 +138,7 @@
     <None Include="Assets\EasyRoads3D Free\Shaders\surfaceAlpha.shader" />
     <None Include="Assets\EasyRoads3D Free\_Readme.txt" />
     <None Include="Assets\EasyRoads3D Free\_readme 1.txt" />
+    <None Include="Assets\Materials\Skidmarks.shader" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
     <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
     <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
