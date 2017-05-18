@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Assets;
+using Assets.GhostCar;
 
 public class CarBehaviour : MonoBehaviour {
     public WheelCollider wheelFL;
@@ -17,6 +18,7 @@ public class CarBehaviour : MonoBehaviour {
     public float maxSpeedBackwardKMH;
     public float steerAngleFactor;
     public bool thrustEnabled;
+    public bool recording;
     public float maxBrakeTorque;
 
     public WheelBehaviour[] wheelBehaviours = new WheelBehaviour[4];
@@ -35,13 +37,10 @@ public class CarBehaviour : MonoBehaviour {
     private float _currentSpeedKMH;
     private bool _doSkidmarking = false;
     private AudioSource _brakeAudioSource;
-
-    private float currentHighscore = 0f;
-
+    private float _pastTime;
 
     void Start() {
-        currentHighscore = PlayerPrefs.GetFloat("Highscore");
-
+        GetComponentInChildren<Renderer>().material.color = BuggyConfiguration.BodyColor;
         //var animator = GetComponent<Animator>();
         //animator.Play("Platformanimation");        
         body = GetComponent<Rigidbody>();
@@ -72,6 +71,7 @@ public class CarBehaviour : MonoBehaviour {
         _smokeREmission = smokeR.emission;
         _smokeLEmission.enabled = true;
         _smokeREmission.enabled = true;
+        
     }
 
     // OnGUI is called on every frame when the orthographic GUI is rendered
@@ -106,13 +106,19 @@ public class CarBehaviour : MonoBehaviour {
 
     void FixedUpdate()        
     {
-        GetComponentInChildren<Renderer>().material.color = BuggyConfiguration.BodyColor;
-
+        if (!thrustEnabled) return;
+       
         var motorTorque = maxTorque * Input.GetAxis("Vertical");
         var steerAngle = maxSteerAngle * Input.GetAxis("Horizontal");
-        if(!thrustEnabled)
+
+        Debug.Log(Application.persistentDataPath);
+
+        if(recording)
         {
-            return;
+            _pastTime += Time.deltaTime;            
+            GhostCarRecorder.Instance.Record(_pastTime, transform.position, transform.rotation, 
+                                            wheelFL.transform.rotation, wheelFR.transform.rotation,
+                                            wheelBL.transform.rotation, wheelBR.transform.rotation);
         }
 
         _currentSpeedKMH = body.velocity.magnitude * 3.6f;
