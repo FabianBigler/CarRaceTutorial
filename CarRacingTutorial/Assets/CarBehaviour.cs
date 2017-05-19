@@ -3,11 +3,7 @@ using System.Collections;
 using Assets;
 using Assets.GhostCar;
 
-public class CarBehaviour : MonoBehaviour {
-    public WheelCollider wheelFL;
-    public WheelCollider wheelFR;
-    public WheelCollider wheelBL;
-    public WheelCollider wheelBR;
+public class CarBehaviour : MonoBehaviour {    
     public float forwardFriction;
     public float sidewaysFriction;
     public float maxTorque = 500;
@@ -20,6 +16,15 @@ public class CarBehaviour : MonoBehaviour {
     public bool thrustEnabled;
     public bool recording;
     public float maxBrakeTorque;
+
+    public WheelCollider wheelColliderFL;
+    public WheelCollider wheelColliderFR;
+    public WheelCollider wheelColliderBL;
+    public WheelCollider wheelColliderBR;
+    public GameObject wheelFL;
+    public GameObject wheelFR;
+    public GameObject wheelBL;
+    public GameObject wheelBR;
 
     public WheelBehaviour[] wheelBehaviours = new WheelBehaviour[4];
 
@@ -119,6 +124,16 @@ public class CarBehaviour : MonoBehaviour {
             GhostCarRecorder.Instance.Record(_pastTime, transform.position, transform.rotation, 
                                             wheelFL.transform.rotation, wheelFR.transform.rotation,
                                             wheelBL.transform.rotation, wheelBR.transform.rotation);
+
+
+            //var message = string.Format("WheelFL: localRotation:{0}, localEuler:{1} Rotation:{2} globalEuler:{3}{4}",
+            //                                    wheelFL.transform.localRotation,
+            //                                    wheelFL.transform.localEulerAngles,
+            //                                    wheelFL.transform.rotation,
+            //                                    wheelFL.transform.eulerAngles,
+            //                                    System.Environment.NewLine);
+
+            //System.IO.File.AppendAllText(System.IO.Path.Combine(Application.persistentDataPath, "test.dat"),message);
         }
 
         _currentSpeedKMH = body.velocity.magnitude * 3.6f;
@@ -147,8 +162,8 @@ public class CarBehaviour : MonoBehaviour {
         bool carIsOnDrySand;
         bool carIsNotOnSand;
        
-        WheelHit hitFL = GetGroundInfos(ref wheelFL, ref groundTagFL, ref groundTextureFL);
-        WheelHit hitFR = GetGroundInfos(ref wheelFR, ref groundTagFR, ref groundTextureFR);
+        WheelHit hitFL = GetGroundInfos(ref wheelColliderFL, ref groundTagFL, ref groundTextureFL);
+        WheelHit hitFR = GetGroundInfos(ref wheelColliderFR, ref groundTagFR, ref groundTextureFR);
         carIsOnDrySand = groundTagFL.CompareTo("Terrain") == 0 && groundTextureFL == 1;
         carIsNotOnSand = !(groundTagFL.CompareTo("Terrain") == 0 && (groundTextureFL <= 1));
                 
@@ -172,21 +187,21 @@ public class CarBehaviour : MonoBehaviour {
         if (doBraking || doFullBrake)
         {
             float brakeTorque = doFullBrake ? maxBrakeTorque : 3000;
-            wheelFL.brakeTorque = brakeTorque;
-            wheelFR.brakeTorque = brakeTorque;
-            wheelBL.brakeTorque = brakeTorque;
-            wheelBR.brakeTorque = brakeTorque;
-            wheelFL.motorTorque = 0;
-            wheelFR.motorTorque = 0;
+            wheelColliderFL.brakeTorque = brakeTorque;
+            wheelColliderFR.brakeTorque = brakeTorque;
+            wheelColliderBL.brakeTorque = brakeTorque;
+            wheelColliderBR.brakeTorque = brakeTorque;
+            wheelColliderFL.motorTorque = 0;
+            wheelColliderFR.motorTorque = 0;
         }
         else
         {
-            wheelFL.brakeTorque = 0;
-            wheelFR.brakeTorque = 0;
-            wheelBL.brakeTorque = 0;
-            wheelBR.brakeTorque = 0;
-            wheelFL.motorTorque = maxTorque * Input.GetAxis("Vertical");
-            wheelFR.motorTorque = wheelFL.motorTorque;
+            wheelColliderFL.brakeTorque = 0;
+            wheelColliderFR.brakeTorque = 0;
+            wheelColliderBL.brakeTorque = 0;
+            wheelColliderBR.brakeTorque = 0;
+            wheelColliderFL.motorTorque = maxTorque * Input.GetAxis("Vertical");
+            wheelColliderFR.motorTorque = wheelColliderFL.motorTorque;
         }
 
         int gearNum = 0;
@@ -225,30 +240,30 @@ public class CarBehaviour : MonoBehaviour {
 
     void SetSteerAngle(float angle)
     {
-        wheelFL.steerAngle = angle;
-        wheelFR.steerAngle = angle;
+        wheelColliderFL.steerAngle = angle;
+        wheelColliderFR.steerAngle = angle;
     }
     void SetMotorTorque(float amount)
     {
-        wheelFL.motorTorque = amount;
-        wheelFR.motorTorque = amount;
+        wheelColliderFL.motorTorque = amount;
+        wheelColliderFR.motorTorque = amount;
     }
 
     void SetFriction(float forwardFriction, float sidewaysFriction)
     {
-        WheelFrictionCurve f_fwWFC = wheelFL.forwardFriction;
-        WheelFrictionCurve f_swWFC = wheelFL.sidewaysFriction;
+        WheelFrictionCurve f_fwWFC = wheelColliderFL.forwardFriction;
+        WheelFrictionCurve f_swWFC = wheelColliderFL.sidewaysFriction;
         f_fwWFC.stiffness = forwardFriction;
         f_swWFC.stiffness = sidewaysFriction;
-        wheelFL.forwardFriction = f_fwWFC;
-        wheelFL.sidewaysFriction = f_swWFC;
-        wheelFR.forwardFriction = f_fwWFC;
-        wheelFR.sidewaysFriction = f_swWFC;
+        wheelColliderFL.forwardFriction = f_fwWFC;
+        wheelColliderFL.sidewaysFriction = f_swWFC;
+        wheelColliderFR.forwardFriction = f_fwWFC;
+        wheelColliderFR.sidewaysFriction = f_swWFC;
         
-        wheelBL.forwardFriction = f_fwWFC;
-        wheelBL.sidewaysFriction = f_swWFC;
-        wheelBR.forwardFriction = f_fwWFC;
-        wheelBR.sidewaysFriction = f_swWFC;    
+        wheelColliderBL.forwardFriction = f_fwWFC;
+        wheelColliderBL.sidewaysFriction = f_swWFC;
+        wheelColliderBR.forwardFriction = f_fwWFC;
+        wheelColliderBR.sidewaysFriction = f_swWFC;    
     }
 
     class gear

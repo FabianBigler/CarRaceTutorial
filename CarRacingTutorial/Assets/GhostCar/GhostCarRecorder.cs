@@ -100,7 +100,7 @@ namespace Assets
             if(newTime < HighscoreTime || HighscoreTime == 0f)
             {
                 PlayerPrefs.SetFloat("HighscoreTime", newTime);
-                HighscoreTime = newTime;
+                //HighscoreTime = newTime;
                 Serializer.Save(highscorePath, currentRecords);
             }                   
         }
@@ -113,6 +113,8 @@ namespace Assets
                 return Serializer.Load<List<GhostCarRecord>>(highscorePath);
             } else
             {
+                PlayerPrefs.SetFloat("HighscoreTime", 0);
+                HighscoreTime = 0;
                 return null;
             }           
         }

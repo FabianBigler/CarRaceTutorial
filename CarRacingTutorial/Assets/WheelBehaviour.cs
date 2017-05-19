@@ -19,8 +19,16 @@ public class WheelBehaviour : MonoBehaviour {
         Quaternion quat;
         Vector3 position;
         wheelCol.GetWorldPose(out position, out quat);
-        transform.position = position;
+        //transform.position = position;
         transform.rotation = quat;
+
+        //var message = string.Format("Wheel: localRotation:{0}, localEuler:{1} Rotation:{2} globalEuler:{3}{4}",
+        //                                    transform.localRotation,
+        //                                    transform.localEulerAngles,
+        //                                    transform.rotation,
+        //                                    transform.eulerAngles,
+        //                                    System.Environment.NewLine);
+        //System.IO.File.AppendAllText(System.IO.Path.Combine(Application.persistentDataPath, "test.dat"), message);
     }
 
     // Creates skidmarks if handbraking
