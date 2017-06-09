@@ -111,8 +111,9 @@ public class CarBehaviour : MonoBehaviour {
 
     void FixedUpdate()        
     {
-        if (!thrustEnabled) return;
-       
+        GetComponentInChildren<Renderer>().material.color = BuggyConfiguration.BodyColor;
+        if (!thrustEnabled) return;        
+
         var motorTorque = maxTorque * Input.GetAxis("Vertical");
         var steerAngle = maxSteerAngle * Input.GetAxis("Horizontal");
 
