@@ -9,8 +9,7 @@ namespace Assets.GhostCar
     [Serializable()]
     public class GhostCarRecord
     {
-        public float PastTime { get; set; }
-        //public Position Position { get; set; }
+        public float PastTime { get; set; }        
         public SerializableVector3 BuggyPosition { get; set; }
         public SerializableQuaternion BuggyRotation { get; set; }
 
@@ -19,13 +18,6 @@ namespace Assets.GhostCar
         public SerializableQuaternion WheelBackLeftRotation { get; set; }
         public SerializableQuaternion WheelBackRightRotation { get; set; }        
     }
-
-    //[Serializable()]
-    //public class HighscoreRecord
-    //{
-    //    public List<GhostCarRecord> Records;
-    //    public float Highscore;
-    //}
 
     [Serializable()]
     public struct SerializableVector3
